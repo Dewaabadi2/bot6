@@ -102,7 +102,7 @@ async def main(nama, email, c):
 
 if __name__ == "__main__":
     jumlah = 500
-    mulaiDari = 0
+    mulaiDari = 8000
     for i in range (mulaiDari, mulaiDari+jumlah):
         contact = contacts[i]        
         nama = contact["nama"]
