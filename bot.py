@@ -101,7 +101,7 @@ async def main(nama, email, c):
         await browser.close()
 
 if __name__ == "__main__":
-    jumlah = 500
+    jumlah = 300
     mulaiDari = 0
     for i in range (mulaiDari, mulaiDari+jumlah):
         contact = contacts[i]        
