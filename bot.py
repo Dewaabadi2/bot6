@@ -16,21 +16,17 @@ def getHP():
 
 async def main(nama, email, c):
     async with async_playwright() as p:
-        #nama = "Player_" + str(n)
-        #email = "Thu." + nama + "@gmail.com"
         noHP = getHP()
         browser = await p.chromium.launch(headless=True)
         page = await browser.new_page(viewport={'width': 720, 'height': 1280})
 
         # 1. Buka halaman website
-        print("Membuka halaman website...")
+        #print("Membuka halaman website...")
         await page.goto("https://virtual-expo.lkpp.go.id/visitor/register")
-        #await page.screenshot(path="01_halaman_awal.png")
-        # 2. Isi data berdasarkan ID elemen (#id_elemen)
-        # Ganti 'username_input' dan 'password_input' dengan ID asli di website
-        print("Mengisi formulir...")
-        # await page.fill("#Nama", "user_anda")
-        # await page.fill("#Email", "email_anda")
+        await page.wait_for_timeout(2000)
+        # 2. Klik cookies
+        await page.mouse.click(620, 1236)
+        # 3. Isi data akun
         await page.fill("#profile_name", nama)
         await page.fill("#profile_email", email)
         await page.fill("#profile_company_name", "Kementerian Imigrasi dan Pemasyarakatan")
@@ -39,70 +35,55 @@ async def main(nama, email, c):
         await page.fill("#profile_password", "Admin123")
         await page.fill("#profile_password_confirmation", "Admin123")
         await page.check("input.form-check-input")
-        #await page.screenshot(path="02_halaman_awal.png")
-
-        # 3. Klik tombol/bagian tertentu (berdasarkan ID atau teks)
-        # Contoh klik elemen dengan ID '#submit-btn'
-        print("Mengeklik tombol submit...")
+        
+        await page.wait_for_timeout(1000)
+        if(c==0):
+            await page.screenshot(path=f"{c}_0reg.png")
+        # 3. Regis
         await page.click("button[type='submit']")
-
-        # Tunggu proses pemuatan setelah klik (opsional)
         await page.wait_for_timeout(5000)
-        #await page.screenshot(path="03.png")
-        await asyncio.sleep(3) # Tunggu elemen/canvas termuat sempurna
-
-        # Panggil fungsi klik berdasarkan teks di dalam gambar/canvas
-        #await click_text_on_image(page, "Lewati")
-        
-        await page.mouse.click(360, 1008)
+        #await page.screenshot(path=f"{c}_1login.png")
         await page.wait_for_timeout(2000)
-        
-       
-        #await page.screenshot(path="04.png")
-        print("Lewati Selesai")
-        #Close banner
-        await page.mouse.click(593, 530)
-        await page.wait_for_timeout(2000)
-        print("Close banner selesai")
-
-        #Klik Mengerti cookies
-        await page.mouse.click(620, 1236)
+        # 4. Tombol lewati
+        await page.mouse.click(352, 1007)
         await page.wait_for_timeout(3000)
-        #Masukk Hall
-        await page.mouse.click(277, 654)
-        await page.wait_for_timeout(2000)
-        #await page.screenshot(path="05.png")
-        print("Masuk Hall selesai")
-        
+        #await page.screenshot(path=f"{c}_2lewati.png")
 
-        #Filter booth
+        #Close banner
+        await page.wait_for_timeout(3000)
+        #Tombol close banner
+        await page.mouse.click(592, 531)
+        #await page.wait_for_timeout(2000)
+        #await page.screenshot(path=f"{c}_3banner.png")
+
+        # 6. Masukk Hall
+        await page.wait_for_timeout(2000)
+        await page.mouse.click(277, 654)
+        await page.wait_for_timeout(1000)
+        #await page.screenshot(path=f"{c}_4hall.png")
+        # 7. Filter booth
         await page.mouse.click(420, 30)
         await page.wait_for_timeout(1000)
-        #await page.screenshot(path="07.png")
-        
+        #await page.screenshot(path=f"{c}_5filter.png")
         await page.keyboard.type("UKPBJ KEMENTERIAN IM")
         await page.wait_for_timeout(1000)
-        #await page.screenshot(path="08.png")
+        #await page.screenshot(path=f"{c}_6booth.png")
         await page.keyboard.press("Enter")
         await page.wait_for_timeout(2000)
-        #await page.screenshot(path="09.png")
-
-        #Whatsapp
-        await page.mouse.click(370, 770)
+        await page.keyboard.press("Enter")
         await page.wait_for_timeout(2000)
-        #namaGambar = f"{c:03d}.png"
-        
-        #await page.screenshot(path=namaGambar)
-
-        #Live chat
-        await page.mouse.click(360, 669)
+        await page.mouse.click(541, 662)
         await page.wait_for_timeout(2000)
-        print(f"Akun No.{c} {nama} Selesai")
+        if(c==0):
+            await page.screenshot(path=f"{c}_7booth.png")
+
+        print(f"Akun : ({c}) {nama} | Selesai")
         await browser.close()
 
 if __name__ == "__main__":
-    jumlah = 300
+    jumlah = 500
     mulaiDari = 0
+    print("Mulai...")
     for i in range (mulaiDari, mulaiDari+jumlah):
         contact = contacts[i]        
         nama = contact["nama"]
@@ -110,3 +91,4 @@ if __name__ == "__main__":
         c = i
         #print(f"Proses: {nama} ({email})")
         asyncio.run(main(nama, email, c))
+    print("Selesai")
